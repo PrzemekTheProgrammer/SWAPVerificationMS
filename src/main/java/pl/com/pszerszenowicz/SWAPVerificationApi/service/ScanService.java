@@ -7,12 +7,22 @@ import pl.com.pszerszenowicz.model.VerificationStatus;
 public class ScanService {
 
     public VerificationStatus processScan(String scan) {
-        return switch (scan.charAt(0)) {
-            case '0','1','2' -> VerificationStatus.approved;
-            case '3','4','5' -> VerificationStatus.outOfDate;
-            case '6','7','8','9' -> VerificationStatus.released;
+        return switch (nullableCharAt(scan, 0)) {
+            case "0", "1" -> VerificationStatus.ready;
+            case "2", "3" -> VerificationStatus.sample;
+            case "4", "5" -> VerificationStatus.expired;
+            case "6", "7" -> VerificationStatus.released;
+            case "8", "9" -> VerificationStatus.destroyed;
             default -> VerificationStatus.verificationError;
         };
+    }
+
+    private String nullableCharAt(String s, int index) {
+        try {
+            return String.valueOf(s.charAt(index));
+        } catch (StringIndexOutOfBoundsException e) {
+            return "";
+        }
     }
 
 
